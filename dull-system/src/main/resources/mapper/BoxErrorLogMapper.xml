@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dullfan.system.mappers.BoxErrorLogMapper">
+
+    <!--实体映射-->
+    <resultMap id="base_result_map" type="com.dullfan.system.entity.po.BoxErrorLog">
+        <!--主键-->
+        <id column="id" property="id"/>
+        <!--日志内容-->
+        <result column="log_content" property="logContent"/>
+        <!--日志状态：0 未处理 1 已处理-->
+        <result column="log_status" property="logStatus"/>
+        <!--创建人-->
+        <result column="create_user" property="createUser"/>
+        <!--创建时间-->
+        <result column="create_time" property="createTime"/>
+        <!--更新人-->
+        <result column="update_user" property="updateUser"/>
+        <!--更新时间-->
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!--通用查询列-->
+    <sql id="base_column_list">
+        id,
+        log_content,
+        log_status,
+        create_user,
+        create_time,
+        update_user,
+        update_time
+    </sql>
+
+    <!--基本查询条件-->
+    <sql id="base_query_condition">
+        <if test="query.id != null ">
+            and id = #{query.id}
+        </if>
+        <if test="query.logContent != null and query.logContent != ''">
+            and log_content = #{query.logContent}
+        </if>
+        <if test="query.logStatus != null ">
+            and log_status = #{query.logStatus}
+        </if>
+        <if test="query.createUser != null ">
+            and create_user = #{query.createUser}
+        </if>
+        <if test="query.createTime != null ">
+            and create_time = #{query.createTime}
+        </if>
+        <if test="query.updateUser != null ">
+            and update_user = #{query.updateUser}
+        </if>
+        <if test="query.updateTime != null ">
+            and update_time = #{query.updateTime}
+        </if>
+    </sql>
+
+    <!--扩展查询条件-->
+    <sql id="base_query_condition_extend">
+        <if test="query.logContentFuzzy != null and query.logContentFuzzy != ''">
+            and log_content like concat('%',#{query.logContentFuzzy},'%')
+        </if>
+        <if test="query.createTimeStart != null ">
+            and create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null ">
+            <![CDATA[and create_time < #{query.createTimeEnd}]]>
+        </if>
+        <if test="query.updateTimeStart != null ">
+            and update_time >= #{query.updateTimeStart}
+        </if>
+        <if test="query.updateTimeEnd != null ">
+            <![CDATA[and update_time < #{query.updateTimeEnd}]]>
+        </if>
+    </sql>
+
+    <!--通用查询条件列-->
+    <sql id="query_condition">
+        <where>
+            <include refid="base_query_condition"/>
+            <include refid="base_query_condition_extend"/>
+        </where>
+    </sql>
+
+    <!--查询列表-->
+    <select id="selectList" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_error_log <include refid="query_condition"/>
+        <if test="query.orderBy!=null"> order by ${query.orderBy} </if>
+        <if test="query.simplePage!=null"> limit ${query.simplePage.start},${query.simplePage.end} </if>
+    </select>
+
+    <!--查询数量-->
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) FROM box_error_log
+        <include refid="query_condition"/>
+    </select>
+
+    <!--插入，匹配有值的字段-->
+    <insert id="insert" parameterType="com.dullfan.system.entity.po.BoxErrorLog"  useGeneratedKeys="true" keyProperty="id">
+        insert into box_error_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.id != null">
+                id,
+            </if>
+            <if test="bean.logContent != null and bean.logContent != ''">
+                log_content,
+            </if>
+            <if test="bean.logStatus != null">
+                log_status,
+            </if>
+            <if test="bean.createUser != null">
+                create_user,
+            </if>
+            <if test="bean.createTime != null">
+                create_time,
+            </if>
+            <if test="bean.updateUser != null">
+                update_user,
+            </if>
+            <if test="bean.updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bean.id != null">
+                #{bean.id},
+            </if>
+            <if test="bean.logContent != null and bean.logContent != ''">
+                #{bean.logContent},
+            </if>
+            <if test="bean.logStatus != null">
+                #{bean.logStatus},
+            </if>
+            <if test="bean.createUser != null">
+                #{bean.createUser},
+            </if>
+            <if test="bean.createTime != null">
+                #{bean.createTime},
+            </if>
+            <if test="bean.updateUser != null">
+                #{bean.updateUser},
+            </if>
+            <if test="bean.updateTime != null">
+                #{bean.updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!--批量插入-->
+    <insert id="insertBatch">
+        INSERT INTO box_error_log (log_content,log_status,create_user,create_time,update_user,update_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.logContent},#{item.logStatus},#{item.createUser},#{item.createTime},#{item.updateUser},#{item.updateTime})
+        </foreach>
+    </insert>
+
+
+    <!--多条件修改-->
+    <update id="updateByParam" parameterType="com.dullfan.system.entity.po.BoxErrorLog">
+        UPDATE box_error_log
+        <set>
+            <if test="bean.logContent != null and bean.logContent != ''">
+                log_content = #{bean.logContent},
+            </if>
+            <if test="bean.logStatus != null">
+                log_status = #{bean.logStatus},
+            </if>
+            <if test="bean.createUser != null">
+                create_user = #{bean.createUser},
+            </if>
+            <if test="bean.createTime != null">
+                create_time = #{bean.createTime},
+            </if>
+            <if test="bean.updateUser != null">
+                update_user = #{bean.updateUser},
+            </if>
+            <if test="bean.updateTime != null">
+                update_time = #{bean.updateTime},
+            </if>
+        </set>
+        <include refid="query_condition" />
+    </update>
+
+    <!--多条件删除-->
+    <delete id="deleteByParam">
+        DELETE FROM box_error_log
+        <include refid="query_condition" />
+    </delete>
+
+    <!--根据Id查询-->
+    <select id="selectById" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_error_log WHERE id = #{id}
+    </select>
+
+    <!--根据Id删除-->
+    <delete id="deleteById">
+        DELETE FROM box_error_log WHERE id = #{id}
+    </delete>
+
+    <!--根据Id批量删除-->
+    <delete id="deleteByIdBatch">
+        DELETE FROM box_error_log WHERE id
+        IN
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
+
+

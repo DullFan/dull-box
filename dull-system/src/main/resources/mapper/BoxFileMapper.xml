@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dullfan.system.mappers.BoxFileMapper">
+
+    <!--实体映射-->
+    <resultMap id="base_result_map" type="com.dullfan.system.entity.po.BoxFile">
+        <!--文件id-->
+        <result column="file_id" property="fileId"/>
+        <!--文件名称-->
+        <result column="filename" property="filename"/>
+        <!--文件物理路径-->
+        <result column="real_path" property="realPath"/>
+        <!--文件实际大小-->
+        <result column="file_size" property="fileSize"/>
+        <!--文件大小展示字符-->
+        <result column="file_size_desc" property="fileSizeDesc"/>
+        <!--文件后缀-->
+        <result column="file_suffix" property="fileSuffix"/>
+        <!--文件预览的响应头Content-Type的值-->
+        <result column="file_preview_content_type" property="filePreviewContentType"/>
+        <!--文件唯一标识-->
+        <result column="identifier" property="identifier"/>
+        <!--创建人-->
+        <result column="create_user" property="createUser"/>
+        <!--创建时间-->
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!--通用查询列-->
+    <sql id="base_column_list">
+        file_id,
+        filename,
+        real_path,
+        file_size,
+        file_size_desc,
+        file_suffix,
+        file_preview_content_type,
+        identifier,
+        create_user,
+        create_time
+    </sql>
+
+    <!--基本查询条件-->
+    <sql id="base_query_condition">
+        <if test="query.fileId != null ">
+            and file_id = #{query.fileId}
+        </if>
+        <if test="query.filename != null and query.filename != ''">
+            and filename = #{query.filename}
+        </if>
+        <if test="query.realPath != null and query.realPath != ''">
+            and real_path = #{query.realPath}
+        </if>
+        <if test="query.fileSize != null and query.fileSize != ''">
+            and file_size = #{query.fileSize}
+        </if>
+        <if test="query.fileSizeDesc != null and query.fileSizeDesc != ''">
+            and file_size_desc = #{query.fileSizeDesc}
+        </if>
+        <if test="query.fileSuffix != null and query.fileSuffix != ''">
+            and file_suffix = #{query.fileSuffix}
+        </if>
+        <if test="query.filePreviewContentType != null and query.filePreviewContentType != ''">
+            and file_preview_content_type = #{query.filePreviewContentType}
+        </if>
+        <if test="query.identifier != null and query.identifier != ''">
+            and identifier = #{query.identifier}
+        </if>
+        <if test="query.createUser != null ">
+            and create_user = #{query.createUser}
+        </if>
+        <if test="query.createTime != null ">
+            and create_time = #{query.createTime}
+        </if>
+    </sql>
+
+    <!--扩展查询条件-->
+    <sql id="base_query_condition_extend">
+        <if test="query.filenameFuzzy != null and query.filenameFuzzy != ''">
+            and filename like concat('%',#{query.filenameFuzzy},'%')
+        </if>
+        <if test="query.realPathFuzzy != null and query.realPathFuzzy != ''">
+            and real_path like concat('%',#{query.realPathFuzzy},'%')
+        </if>
+        <if test="query.fileSizeFuzzy != null and query.fileSizeFuzzy != ''">
+            and file_size like concat('%',#{query.fileSizeFuzzy},'%')
+        </if>
+        <if test="query.fileSizeDescFuzzy != null and query.fileSizeDescFuzzy != ''">
+            and file_size_desc like concat('%',#{query.fileSizeDescFuzzy},'%')
+        </if>
+        <if test="query.fileSuffixFuzzy != null and query.fileSuffixFuzzy != ''">
+            and file_suffix like concat('%',#{query.fileSuffixFuzzy},'%')
+        </if>
+        <if test="query.filePreviewContentTypeFuzzy != null and query.filePreviewContentTypeFuzzy != ''">
+            and file_preview_content_type like concat('%',#{query.filePreviewContentTypeFuzzy},'%')
+        </if>
+        <if test="query.identifierFuzzy != null and query.identifierFuzzy != ''">
+            and identifier like concat('%',#{query.identifierFuzzy},'%')
+        </if>
+        <if test="query.createTimeStart != null ">
+            and create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null ">
+            <![CDATA[and create_time < #{query.createTimeEnd}]]>
+        </if>
+    </sql>
+
+    <!--通用查询条件列-->
+    <sql id="query_condition">
+        <where>
+            <include refid="base_query_condition"/>
+            <include refid="base_query_condition_extend"/>
+        </where>
+    </sql>
+
+    <!--查询列表-->
+    <select id="selectList" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_file <include refid="query_condition"/>
+        <if test="query.orderBy!=null"> order by ${query.orderBy} </if>
+        <if test="query.simplePage!=null"> limit ${query.simplePage.start},${query.simplePage.end} </if>
+    </select>
+
+    <!--查询数量-->
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) FROM box_file
+        <include refid="query_condition"/>
+    </select>
+
+    <!--插入，匹配有值的字段-->
+    <insert id="insert" parameterType="com.dullfan.system.entity.po.BoxFile"  >
+        insert into box_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.fileId != null">
+                file_id,
+            </if>
+            <if test="bean.filename != null and bean.filename != ''">
+                filename,
+            </if>
+            <if test="bean.realPath != null and bean.realPath != ''">
+                real_path,
+            </if>
+            <if test="bean.fileSize != null and bean.fileSize != ''">
+                file_size,
+            </if>
+            <if test="bean.fileSizeDesc != null and bean.fileSizeDesc != ''">
+                file_size_desc,
+            </if>
+            <if test="bean.fileSuffix != null and bean.fileSuffix != ''">
+                file_suffix,
+            </if>
+            <if test="bean.filePreviewContentType != null and bean.filePreviewContentType != ''">
+                file_preview_content_type,
+            </if>
+            <if test="bean.identifier != null and bean.identifier != ''">
+                identifier,
+            </if>
+            <if test="bean.createUser != null">
+                create_user,
+            </if>
+            <if test="bean.createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bean.fileId != null">
+                #{bean.fileId},
+            </if>
+            <if test="bean.filename != null and bean.filename != ''">
+                #{bean.filename},
+            </if>
+            <if test="bean.realPath != null and bean.realPath != ''">
+                #{bean.realPath},
+            </if>
+            <if test="bean.fileSize != null and bean.fileSize != ''">
+                #{bean.fileSize},
+            </if>
+            <if test="bean.fileSizeDesc != null and bean.fileSizeDesc != ''">
+                #{bean.fileSizeDesc},
+            </if>
+            <if test="bean.fileSuffix != null and bean.fileSuffix != ''">
+                #{bean.fileSuffix},
+            </if>
+            <if test="bean.filePreviewContentType != null and bean.filePreviewContentType != ''">
+                #{bean.filePreviewContentType},
+            </if>
+            <if test="bean.identifier != null and bean.identifier != ''">
+                #{bean.identifier},
+            </if>
+            <if test="bean.createUser != null">
+                #{bean.createUser},
+            </if>
+            <if test="bean.createTime != null">
+                #{bean.createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!--批量插入-->
+    <insert id="insertBatch">
+        INSERT INTO box_file (file_id,filename,real_path,file_size,file_size_desc,file_suffix,file_preview_content_type,identifier,create_user,create_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.fileId},#{item.filename},#{item.realPath},#{item.fileSize},#{item.fileSizeDesc},#{item.fileSuffix},#{item.filePreviewContentType},#{item.identifier},#{item.createUser},#{item.createTime})
+        </foreach>
+    </insert>
+
+
+    <!--多条件修改-->
+    <update id="updateByParam" parameterType="com.dullfan.system.entity.po.BoxFile">
+        UPDATE box_file
+        <set>
+            <if test="bean.fileId != null">
+                file_id = #{bean.fileId},
+            </if>
+            <if test="bean.filename != null and bean.filename != ''">
+                filename = #{bean.filename},
+            </if>
+            <if test="bean.realPath != null and bean.realPath != ''">
+                real_path = #{bean.realPath},
+            </if>
+            <if test="bean.fileSize != null and bean.fileSize != ''">
+                file_size = #{bean.fileSize},
+            </if>
+            <if test="bean.fileSizeDesc != null and bean.fileSizeDesc != ''">
+                file_size_desc = #{bean.fileSizeDesc},
+            </if>
+            <if test="bean.fileSuffix != null and bean.fileSuffix != ''">
+                file_suffix = #{bean.fileSuffix},
+            </if>
+            <if test="bean.filePreviewContentType != null and bean.filePreviewContentType != ''">
+                file_preview_content_type = #{bean.filePreviewContentType},
+            </if>
+            <if test="bean.identifier != null and bean.identifier != ''">
+                identifier = #{bean.identifier},
+            </if>
+            <if test="bean.createUser != null">
+                create_user = #{bean.createUser},
+            </if>
+            <if test="bean.createTime != null">
+                create_time = #{bean.createTime},
+            </if>
+        </set>
+        <include refid="query_condition" />
+    </update>
+
+    <!--多条件删除-->
+    <delete id="deleteByParam">
+        DELETE FROM box_file
+        <include refid="query_condition" />
+    </delete>
+
+    <!--根据FileId查询-->
+    <select id="selectByFileId" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_file WHERE file_id = #{fileId}
+    </select>
+
+    <select id="selectByFileIds" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_file WHERE file_id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--根据FileId删除-->
+    <delete id="deleteByFileId">
+        DELETE FROM box_file WHERE file_id = #{fileId}
+    </delete>
+
+    <delete id="deleteByFileIds">
+        DELETE FROM box_file WHERE file_id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
+
+

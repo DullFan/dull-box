@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dullfan.system.mappers.BoxShareFileMapper">
+
+    <!--实体映射-->
+    <resultMap id="base_result_map" type="com.dullfan.system.entity.po.BoxShareFile">
+        <!--主键-->
+        <id column="id" property="id"/>
+        <!--分享id-->
+        <result column="share_id" property="shareId"/>
+        <!--文件记录ID-->
+        <result column="file_id" property="fileId"/>
+        <!--分享创建人-->
+        <result column="create_user" property="createUser"/>
+        <!--创建时间-->
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!--通用查询列-->
+    <sql id="base_column_list">
+        id,
+        share_id,
+        file_id,
+        create_user,
+        create_time
+    </sql>
+
+    <!--基本查询条件-->
+    <sql id="base_query_condition">
+        <if test="query.id != null ">
+            and id = #{query.id}
+        </if>
+        <if test="query.shareId != null ">
+            and share_id = #{query.shareId}
+        </if>
+        <if test="query.fileId != null ">
+            and file_id = #{query.fileId}
+        </if>
+        <if test="query.createUser != null ">
+            and create_user = #{query.createUser}
+        </if>
+        <if test="query.createTime != null ">
+            and create_time = #{query.createTime}
+        </if>
+    </sql>
+
+    <!--扩展查询条件-->
+    <sql id="base_query_condition_extend">
+        <if test="query.createTimeStart != null ">
+            and create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null ">
+            <![CDATA[and create_time < #{query.createTimeEnd}]]>
+        </if>
+    </sql>
+
+    <!--通用查询条件列-->
+    <sql id="query_condition">
+        <where>
+            <include refid="base_query_condition"/>
+            <include refid="base_query_condition_extend"/>
+        </where>
+    </sql>
+
+    <!--查询列表-->
+    <select id="selectList" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_share_file <include refid="query_condition"/>
+        <if test="query.orderBy!=null"> order by ${query.orderBy} </if>
+        <if test="query.simplePage!=null"> limit ${query.simplePage.start},${query.simplePage.end} </if>
+    </select>
+
+    <!--查询列表-->
+    <select id="selectAllList" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_share_file <include refid="query_condition"/>
+    </select>
+
+    <!--查询数量-->
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) FROM box_share_file
+        <include refid="query_condition"/>
+    </select>
+
+    <!--插入，匹配有值的字段-->
+    <insert id="insert" parameterType="com.dullfan.system.entity.po.BoxShareFile"  useGeneratedKeys="true" keyProperty="id">
+        insert into box_share_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.id != null">
+                id,
+            </if>
+            <if test="bean.shareId != null">
+                share_id,
+            </if>
+            <if test="bean.fileId != null">
+                file_id,
+            </if>
+            <if test="bean.createUser != null">
+                create_user,
+            </if>
+            <if test="bean.createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bean.id != null">
+                #{bean.id},
+            </if>
+            <if test="bean.shareId != null">
+                #{bean.shareId},
+            </if>
+            <if test="bean.fileId != null">
+                #{bean.fileId},
+            </if>
+            <if test="bean.createUser != null">
+                #{bean.createUser},
+            </if>
+            <if test="bean.createTime != null">
+                #{bean.createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!--批量插入-->
+    <insert id="insertBatch">
+        INSERT INTO box_share_file (share_id,file_id,create_user,create_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.shareId},#{item.fileId},#{item.createUser},#{item.createTime})
+        </foreach>
+    </insert>
+
+
+    <!--多条件修改-->
+    <update id="updateByParam" parameterType="com.dullfan.system.entity.po.BoxShareFile">
+        UPDATE box_share_file
+        <set>
+            <if test="bean.shareId != null">
+                share_id = #{bean.shareId},
+            </if>
+            <if test="bean.fileId != null">
+                file_id = #{bean.fileId},
+            </if>
+            <if test="bean.createUser != null">
+                create_user = #{bean.createUser},
+            </if>
+            <if test="bean.createTime != null">
+                create_time = #{bean.createTime},
+            </if>
+        </set>
+        <include refid="query_condition" />
+    </update>
+
+    <!--多条件删除-->
+    <delete id="deleteByParam">
+        DELETE FROM box_share_file
+        <include refid="query_condition" />
+    </delete>
+
+    <!--根据Id查询-->
+    <select id="selectById" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_share_file WHERE id = #{id}
+    </select>
+
+    <!--根据Id删除-->
+    <delete id="deleteById">
+        DELETE FROM box_share_file WHERE id = #{id}
+    </delete>
+
+    <!--根据Id批量删除-->
+    <delete id="deleteByIdBatch">
+        DELETE FROM box_share_file WHERE id
+        IN
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--根据ShareIdAndFileId查询-->
+    <select id="selectByShareIdAndFileId" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_share_file WHERE share_id = #{shareId} AND file_id = #{fileId}
+    </select>
+
+    <select id="selectByFileIds" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_share_file WHERE file_id
+        IN
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--根据ShareIdAndFileId删除-->
+    <delete id="deleteByShareIdAndFileId">
+        DELETE FROM box_share_file WHERE share_id = #{shareId} AND file_id = #{fileId}
+    </delete>
+    <delete id="deleteByShareIds">
+        DELETE FROM box_share_file WHERE
+                                    create_user = #{userId}
+                                       AND
+                                share_id         IN
+        <foreach collection="shareId" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
+
+

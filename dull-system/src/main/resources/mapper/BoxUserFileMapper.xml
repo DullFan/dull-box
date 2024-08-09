@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dullfan.system.mappers.BoxUserFileMapper">
+
+    <!--实体映射-->
+    <resultMap id="base_result_map" type="com.dullfan.system.entity.po.BoxUserFile">
+        <!--文件记录ID-->
+        <result column="file_id" property="fileId"/>
+        <!--用户ID-->
+        <result column="user_id" property="userId"/>
+        <!--上级文件夹ID,顶级文件夹为0-->
+        <result column="parent_id" property="parentId"/>
+        <!--真实文件id-->
+        <result column="real_file_id" property="realFileId"/>
+        <!--文件名-->
+        <result column="filename" property="filename"/>
+        <!--是否是文件夹 （0 否 1 是）-->
+        <result column="folder_flag" property="folderFlag"/>
+        <!--文件大小展示字符-->
+        <result column="file_size_desc" property="fileSizeDesc"/>
+        <!--文件类型（1 普通文件 2 压缩文件 3 excel 4 word 5 pdf 6 txt 7 图片 8 音频 9 视频 10 ppt 11 源码文件 12 csv）-->
+        <result column="file_type" property="fileType"/>
+        <!--删除标识（0 否 1 是）-->
+        <result column="del_flag" property="delFlag"/>
+        <!--创建人-->
+        <result column="create_user" property="createUser"/>
+        <!--创建时间-->
+        <result column="create_time" property="createTime"/>
+        <!--更新人-->
+        <result column="update_user" property="updateUser"/>
+        <!--更新时间-->
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!--实体映射-->
+    <resultMap id="base_result_map_2" type="com.dullfan.system.entity.vo.BoxUserFileVO">
+        <!--文件记录ID-->
+        <result column="file_id" property="fileId"/>
+        <!--用户ID-->
+        <result column="user_id" property="userId"/>
+        <!--上级文件夹ID,顶级文件夹为0-->
+        <result column="parent_id" property="parentId"/>
+        <!--真实文件id-->
+        <result column="real_file_id" property="realFileId"/>
+        <!--文件名-->
+        <result column="filename" property="filename"/>
+        <!--是否是文件夹 （0 否 1 是）-->
+        <result column="folder_flag" property="folderFlag"/>
+        <!--文件大小展示字符-->
+        <result column="file_size_desc" property="fileSizeDesc"/>
+        <!--文件类型（1 普通文件 2 压缩文件 3 excel 4 word 5 pdf 6 txt 7 图片 8 音频 9 视频 10 ppt 11 源码文件 12 csv）-->
+        <result column="file_type" property="fileType"/>
+        <!--删除标识（0 否 1 是）-->
+        <result column="del_flag" property="delFlag"/>
+        <!--创建人-->
+        <result column="create_user" property="createUser"/>
+        <!--创建时间-->
+        <result column="create_time" property="createTime"/>
+        <!--更新人-->
+        <result column="update_user" property="updateUser"/>
+        <!--更新时间-->
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!--通用查询列-->
+    <sql id="base_column_list">
+        file_id,
+        user_id,
+        parent_id,
+        real_file_id,
+        filename,
+        folder_flag,
+        file_size_desc,
+        file_type,
+        del_flag,
+        create_user,
+        create_time,
+        update_user,
+        update_time
+    </sql>
+
+    <!--基本查询条件-->
+    <sql id="base_query_condition">
+        <if test="query.fileId != null ">
+            and file_id = #{query.fileId}
+        </if>
+        <if test="query.userId != null ">
+            and user_id = #{query.userId}
+        </if>
+        <if test="query.parentId != null ">
+            and parent_id = #{query.parentId}
+        </if>
+        <if test="query.realFileId != null ">
+            and real_file_id = #{query.realFileId}
+        </if>
+        <if test="query.filename != null and query.filename != ''">
+            and filename = #{query.filename}
+        </if>
+        <if test="query.folderFlag != null ">
+            and folder_flag = #{query.folderFlag}
+        </if>
+        <if test="query.fileSizeDesc != null and query.fileSizeDesc != ''">
+            and file_size_desc = #{query.fileSizeDesc}
+        </if>
+        <if test="query.fileType != null ">
+            and file_type = #{query.fileType}
+        </if>
+        <if test="query.delFlag != null ">
+            and del_flag = #{query.delFlag}
+        </if>
+        <if test="query.createUser != null ">
+            and create_user = #{query.createUser}
+        </if>
+        <if test="query.createTime != null ">
+            and create_time = #{query.createTime}
+        </if>
+        <if test="query.updateUser != null ">
+            and update_user = #{query.updateUser}
+        </if>
+        <if test="query.updateTime != null ">
+            and update_time = #{query.updateTime}
+        </if>
+    </sql>
+
+    <!--扩展查询条件-->
+    <sql id="base_query_condition_extend">
+        <if test="query.filenameFuzzy != null and query.filenameFuzzy != ''">
+            and filename like concat('%',#{query.filenameFuzzy},'%')
+        </if>
+        <if test="query.fileSizeDescFuzzy != null and query.fileSizeDescFuzzy != ''">
+            and file_size_desc like concat('%',#{query.fileSizeDescFuzzy},'%')
+        </if>
+        <if test="query.createTimeStart != null ">
+            and create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null ">
+            <![CDATA[and create_time < #{query.createTimeEnd}]]>
+        </if>
+        <if test="query.updateTimeStart != null ">
+            and update_time >= #{query.updateTimeStart}
+        </if>
+        <if test="query.updateTimeEnd != null ">
+            <![CDATA[and update_time < #{query.updateTimeEnd}]]>
+        </if>
+    </sql>
+
+    <!--扩展查询条件-->
+    <sql id="base_query_condition_extend_left_filename">
+        <if test="query.filenameFuzzy != null and query.filenameFuzzy != ''">
+            and filename like concat(#{query.filenameFuzzy},'%')
+        </if>
+        <if test="query.fileSizeDescFuzzy != null and query.fileSizeDescFuzzy != ''">
+            and file_size_desc like concat('%',#{query.fileSizeDescFuzzy},'%')
+        </if>
+        <if test="query.createTimeStart != null ">
+            and create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeEnd != null ">
+            <![CDATA[and create_time < #{query.createTimeEnd}]]>
+        </if>
+        <if test="query.updateTimeStart != null ">
+            and update_time >= #{query.updateTimeStart}
+        </if>
+        <if test="query.updateTimeEnd != null ">
+            <![CDATA[and create_time < #{query.updateTimeEnd}]]>
+        </if>
+    </sql>
+
+    <!--通用查询条件列-->
+    <sql id="query_condition">
+        <where>
+            <include refid="base_query_condition"/>
+            <include refid="base_query_condition_extend"/>
+        </where>
+    </sql>
+
+
+    <!--通用查询条件列-->
+    <sql id="query_condition_left_filename">
+        <where>
+            <include refid="base_query_condition"/>
+            <include refid="base_query_condition_extend_left_filename"/>
+        </where>
+    </sql>
+
+    <!--查询列表-->
+    <select id="selectList" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_user_file <include refid="query_condition"/>
+        <if test="query.orderBy!=null"> order by ${query.orderBy} </if>
+        <if test="query.simplePage!=null"> limit ${query.simplePage.start},${query.simplePage.end} </if>
+    </select>
+
+    <select id="selectAllList" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_user_file <include refid="query_condition"/>
+    </select>
+
+    <!--查询数量-->
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) FROM box_user_file
+        <include refid="query_condition"/>
+    </select>
+
+    <!--查询文件重复数量-->
+    <select id="selectCountFileName" resultType="java.lang.Integer">
+        select count(1) FROM box_user_file
+        <include refid="query_condition_left_filename"/>
+    </select>
+
+    <!--插入，匹配有值的字段-->
+    <insert id="insert" parameterType="com.dullfan.system.entity.po.BoxUserFile"  >
+        insert into box_user_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.fileId != null">
+                file_id,
+            </if>
+            <if test="bean.userId != null">
+                user_id,
+            </if>
+            <if test="bean.parentId != null">
+                parent_id,
+            </if>
+            <if test="bean.realFileId != null">
+                real_file_id,
+            </if>
+            <if test="bean.filename != null and bean.filename != ''">
+                filename,
+            </if>
+            <if test="bean.folderFlag != null">
+                folder_flag,
+            </if>
+            <if test="bean.fileSizeDesc != null and bean.fileSizeDesc != ''">
+                file_size_desc,
+            </if>
+            <if test="bean.fileType != null">
+                file_type,
+            </if>
+            <if test="bean.delFlag != null">
+                del_flag,
+            </if>
+            <if test="bean.createUser != null">
+                create_user,
+            </if>
+            <if test="bean.createTime != null">
+                create_time,
+            </if>
+            <if test="bean.updateUser != null">
+                update_user,
+            </if>
+            <if test="bean.updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bean.fileId != null">
+                #{bean.fileId},
+            </if>
+            <if test="bean.userId != null">
+                #{bean.userId},
+            </if>
+            <if test="bean.parentId != null">
+                #{bean.parentId},
+            </if>
+            <if test="bean.realFileId != null">
+                #{bean.realFileId},
+            </if>
+            <if test="bean.filename != null and bean.filename != ''">
+                #{bean.filename},
+            </if>
+            <if test="bean.folderFlag != null">
+                #{bean.folderFlag},
+            </if>
+            <if test="bean.fileSizeDesc != null and bean.fileSizeDesc != ''">
+                #{bean.fileSizeDesc},
+            </if>
+            <if test="bean.fileType != null">
+                #{bean.fileType},
+            </if>
+            <if test="bean.delFlag != null">
+                #{bean.delFlag},
+            </if>
+            <if test="bean.createUser != null">
+                #{bean.createUser},
+            </if>
+            <if test="bean.createTime != null">
+                #{bean.createTime},
+            </if>
+            <if test="bean.updateUser != null">
+                #{bean.updateUser},
+            </if>
+            <if test="bean.updateTime != null">
+                #{bean.updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!--批量插入-->
+    <insert id="insertBatch">
+        INSERT INTO box_user_file (file_id,user_id,parent_id,real_file_id,filename,folder_flag,file_size_desc,file_type,del_flag,create_user,create_time,update_user,update_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.fileId},#{item.userId},#{item.parentId},#{item.realFileId},#{item.filename},#{item.folderFlag},#{item.fileSizeDesc},#{item.fileType},#{item.delFlag},#{item.createUser},#{item.createTime},#{item.updateUser},#{item.updateTime})
+        </foreach>
+    </insert>
+
+
+    <!--多条件修改-->
+    <update id="updateByParam" parameterType="com.dullfan.system.entity.po.BoxUserFile">
+        UPDATE box_user_file
+        <set>
+            <if test="bean.fileId != null">
+                file_id = #{bean.fileId},
+            </if>
+            <if test="bean.userId != null">
+                user_id = #{bean.userId},
+            </if>
+            <if test="bean.parentId != null">
+                parent_id = #{bean.parentId},
+            </if>
+            <if test="bean.realFileId != null">
+                real_file_id = #{bean.realFileId},
+            </if>
+            <if test="bean.filename != null and bean.filename != ''">
+                filename = #{bean.filename},
+            </if>
+            <if test="bean.folderFlag != null">
+                folder_flag = #{bean.folderFlag},
+            </if>
+            <if test="bean.fileSizeDesc != null and bean.fileSizeDesc != ''">
+                file_size_desc = #{bean.fileSizeDesc},
+            </if>
+            <if test="bean.fileType != null">
+                file_type = #{bean.fileType},
+            </if>
+            <if test="bean.delFlag != null">
+                del_flag = #{bean.delFlag},
+            </if>
+            <if test="bean.createUser != null">
+                create_user = #{bean.createUser},
+            </if>
+            <if test="bean.createTime != null">
+                create_time = #{bean.createTime},
+            </if>
+            <if test="bean.updateUser != null">
+                update_user = #{bean.updateUser},
+            </if>
+            <if test="bean.updateTime != null">
+                update_time = #{bean.updateTime},
+            </if>
+        </set>
+        <include refid="query_condition" />
+    </update>
+
+    <update id="updateDelFlag">
+        UPDATE
+            box_user_file
+        SET
+            del_flag = #{del_flag},
+            update_user = #{user_id},
+            update_time = NOW()
+        WHERE
+            file_id
+        IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND
+            user_id = #{user_id}
+    </update>
+
+    <update id="updateByFileIds">
+        <foreach collection="list" item="item" separator=";">
+            UPDATE
+                box_user_file
+            <set>
+                <if test="item.userId != null">
+                    user_id = #{item.userId},
+                </if>
+                <if test="item.parentId != null">
+                    parent_id = #{item.parentId},
+                </if>
+                <if test="item.realFileId != null">
+                    real_file_id = #{item.realFileId},
+                </if>
+                <if test="item.filename != null and item.filename != ''">
+                    filename = #{item.filename},
+                </if>
+                <if test="item.folderFlag != null">
+                    folder_flag = #{item.folderFlag},
+                </if>
+                <if test="item.fileSizeDesc != null and item.fileSizeDesc != ''">
+                    file_size_desc = #{item.fileSizeDesc},
+                </if>
+                <if test="item.fileType != null">
+                    file_type = #{item.fileType},
+                </if>
+                <if test="item.delFlag != null">
+                    del_flag = #{item.delFlag},
+                </if>
+                <if test="item.createUser != null">
+                    create_user = #{item.createUser},
+                </if>
+                <if test="item.createTime != null">
+                    create_time = #{item.createTime},
+                </if>
+                <if test="item.updateUser != null">
+                    update_user = #{item.updateUser},
+                </if>
+                <if test="item.updateTime != null">
+                    update_time = #{item.updateTime},
+                </if>
+            </set>
+            WHERE
+                file_id = #{item.fileId}
+        </foreach>
+    </update>
+
+    <select id="recycles" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_user_file WHERE user_id = #{userId} AND del_flag = 1
+    </select>
+
+
+    <!--多条件删除-->
+    <delete id="deleteByParam">
+        DELETE FROM box_user_file
+        <include refid="query_condition" />
+    </delete>
+
+    <!--根据FileId查询-->
+    <select id="selectByFileId" resultMap="base_result_map">
+        SELECT <include refid="base_column_list"/> FROM box_user_file WHERE file_id = #{fileId}
+    </select>
+
+    <!--根据FileId删除-->
+    <delete id="deleteByFileId">
+        DELETE FROM box_user_file WHERE file_id = #{fileId}
+    </delete>
+
+    <delete id="deleteByFileIds">
+        DELETE FROM box_user_file WHERE file_id in
+            <foreach item="id" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </delete>
+
+
+    <select id="selectListByDto" resultType="com.dullfan.system.entity.po.BoxUserFile" resultMap="base_result_map">
+            SELECT
+                file_id,
+                user_id,
+                parent_id,
+                real_file_id,
+                filename,
+                folder_flag,
+                file_size_desc,
+                file_type,
+                del_flag,
+                create_user,
+                create_time,
+                update_user,
+                update_time
+            FROM
+                box_user_file
+            WHERE
+                user_id = #{param.userId}
+            <if test="param.parentId != null and param.parentId != -1">
+                AND parent_id = #{param.parentId}
+            </if>
+            <if test="param.fileTypeArray != null">
+                AND file_type IN
+                <foreach collection="param.fileTypeArray" open="(" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            AND del_flag = #{param.delFlag}
+    </select>
+
+    <select id="selectFileList" resultType="com.dullfan.system.entity.po.BoxUserFile" resultMap="base_result_map_2">
+        SELECT
+        file_id,
+        user_id,
+        parent_id,
+        real_file_id,
+        filename,
+        folder_flag,
+        file_size_desc,
+        file_type,
+        del_flag,
+        create_user,
+        create_time,
+        update_user,
+        update_time
+        FROM
+            box_user_file
+        WHERE
+            user_id = #{userId}
+        <if test="parentId != null and parentId != -1">
+            AND parent_id = #{parentId}
+        </if>
+        <if test="fileTypeArray != null">
+            AND file_type IN
+            <foreach collection="fileTypeArray" open="(" close=")" item="item" separator=",">
+                #{item}
+            </foreach>
+        </if>
+            AND del_flag = #{delFlag}
+        AND
+            file_id IN
+        <foreach item="id" collection="fileIdList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectByIds" resultMap="base_result_map" resultType="com.dullfan.system.entity.po.BoxUserFile">
+        SELECT
+            <include refid="base_column_list"/>
+        FROM
+            box_user_file
+        WHERE
+            file_id IN
+            <foreach item="id" collection="list" open="(" separator="," close=")">
+              #{id}
+            </foreach>
+        <if test="user_id != null and user_id != -1">
+            AND user_id = #{user_id}
+        </if>
+    </select>
+
+    <select id="searchFile" resultMap="base_result_map_2" >
+        SELECT
+            file_id,
+            parent_id,
+            filename,
+            user_id,
+            folder_flag,
+            file_size_desc,
+            file_type,
+            create_user,
+            create_time,
+            update_user,
+            update_time
+        FROM
+            box_user_file
+        WHERE
+            user_id = #{param.userId}
+            AND filename LIKE CONCAT(#{param.keyword},'%')
+        <if test="param.fileTypes != null">
+            AND file_type IN
+            <foreach collection="param.fileTypes" open="(" close=")" item="item" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+
+</mapper>
+
+
